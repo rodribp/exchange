@@ -50,8 +50,9 @@ app.post('/api/connect', catchAsyncErrors(routes.connect));
 app.get('/api/info', catchAsyncErrors(routes.getInfo));
 app.get('/api/posts', catchAsyncErrors(routes.getPosts));
 app.post('/api/posts', catchAsyncErrors(routes.createPost));
+app.post('/api/invoice/:amt', catchAsyncErrors(routes.createInvoiceAmt));
 app.post('/api/posts/:id/invoice', catchAsyncErrors(routes.postInvoice));
-app.post('/api/posts/:id/upvote', catchAsyncErrors(routes.upvotePost));
+app.post('/api/verify/payment', catchAsyncErrors(routes.verifyPayment));
 app.post('/api/posts/:id/verify', catchAsyncErrors(routes.verifyPost));
 
 //

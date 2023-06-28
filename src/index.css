@@ -11,6 +11,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -124,3 +125,92 @@ code {
 
 
 /*Fin estilos Post*/
+
+/* Inicio Estilo contenedor cards*/
+  
+  .books-info{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0 auto
+  }
+
+  .book-info{
+    margin: 30px;
+    
+  }
+
+/* Fin Estilo contenedor cards*/
+
+
+/*Inicio estilo custom-card*/
+.custom-card{
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+
+}
+
+
+.custom-card .author {
+  font-size: 0.8rem;
+  font-style: italic;
+  text-align: right;
+}
+
+.custom-card .rating {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fca311;
+  text-align: right;
+}
+
+.card-img{
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.card-text{
+  font-size: 0.9rem;
+  text-align: justify;
+  margin-bottom: 1rem;
+}
+
+.custom-card .author {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.custom-card .rating {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fca311;
+}
+
+.custom-card .buy-button{
+  padding: 0.5rem 1rem;
+  background-color: #fca311;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.custom-card .card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.custom-card .buy-button:hover {
+  background-color: #e58e0b;
+}

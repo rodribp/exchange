@@ -27,7 +27,6 @@ export class Store {
 
   // PayModal state
   showPayModal = false;
-  pmtForPost: Post | undefined;
   pmtAmount = '';
   pmtRequest = '';
   pmtHash = '';
@@ -103,36 +102,6 @@ export class Store {
     this.pubkey = info.pubkey;
   };
 
-  fetchPosts = async () => {
-    this.clearError();
-    try {
-      this.posts = await api.fetchPosts();
-    } catch (err) {
-      this.error = err.message;
-    }
-  };
-
-  createPost = async (title: string, content: string) => {
-    this.clearError();
-    try {
-      await api.createPost(title, content);
-      this.gotoPosts();
-    } catch (err) {
-      this.error = err.message;
-    }
-  };
-
-  upvotePost = async () => {
-    this.pmtError = '';
-    try {
-      if (!this.pmtForPost) throw new Error('No post selected to upvote');
-      await api.upvotePost(this.pmtForPost.id, this.pmtHash);
-      this.pmtSuccessMsg = `Your payment of ${this.pmtAmount} sats to ${this.pmtForPost.username} was successful! The post has been upvoted!`;
-    } catch (err) {
-      this.pmtError = err.message;
-    }
-  };
-
   verifyPost = async (postId: number) => {
     this.clearError();
     try {
@@ -147,7 +116,7 @@ export class Store {
     this.clearError();
     try {
       const res = await api.createInvoice(post.id);
-      this.pmtForPost = post;
+      //this.pmtForPost = post;
       this.pmtAmount = res.amount;
       this.pmtRequest = res.payreq;
       this.pmtHash = res.hash;
@@ -159,8 +128,33 @@ export class Store {
     }
   };
 
+  createInvoiceAmt = async (amount: number) => {
+    this.clearError();
+    try {
+      const res = await api.createInvoiceAmt(amount);
+      this.pmtAmount = res.amount;
+      this.pmtRequest = res.payreq;
+      this.pmtHash = res.hash;
+      this.pmtSuccessMsg = '';
+      this.pmtError = '';
+      this.showPayModal = true;
+    } catch (err) {
+      this.error = err.message;
+    }
+  };
+
+  verifyPayment = async () => {
+    this.pmtError = '';
+    try {
+      await api.verifyPayment(this.pmtHash);
+      this.pmtSuccessMsg = `Your payment of ${this.pmtAmount} sats to was successful!`;
+    } catch (err) {
+      this.pmtError = err.message;
+    }
+  };
+
   hidePaymentRequest = () => {
-    this.pmtForPost = undefined;
+    //this.pmtForPost = undefined;
     this.pmtAmount = '';
     this.pmtRequest = '';
     this.pmtHash = '';
@@ -185,7 +179,6 @@ export class Store {
       // upvote the post when the incoming payment is made for the
       // pmtHash the we are waiting for
       if (hash === this.pmtHash) {
-        this.upvotePost();
       }
       // update the balance when an invoice is paid to the current user
       if (pubkey === this.pubkey) {

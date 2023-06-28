@@ -19,7 +19,6 @@ const CreatePost: React.FC = () => {
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLElement>) => {
       e.preventDefault();
-      store.createPost(title, content);
     },
     [title, content, store],
   );

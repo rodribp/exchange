@@ -84,9 +84,13 @@ export const createInvoice = async (postId: number) => {
   return await httpPost(`posts/${postId}/invoice`);
 };
 
-export const upvotePost = async (postId: number, hash: string) => {
+export const createInvoiceAmt = async (amt: number) => {
+  return await httpPost(`invoice/${amt}`);
+}
+
+export const verifyPayment = async (hash: string) => {
   const request = { hash };
-  return await httpPost(`posts/${postId}/upvote`, request);
+  return await httpPost(`verify/payment`, request);
 };
 
 export const verifyPost = async (postId: number) => {

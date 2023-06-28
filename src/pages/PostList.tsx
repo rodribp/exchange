@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { Button, Form, Jumbotron } from 'react-bootstrap';
-import { observer } from 'mobx-react-lite';
+import React, { useState, useCallback } from 'react';
+import { Button, Form, Jumbotron} from 'react-bootstrap';
+import { observer, useAsObservableSource } from 'mobx-react-lite';
 import PayModal from '../components/PayModal';
 import PostCard from '../components/PostCard';
 import { useStore } from '../store/Provider';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, AreaChart, Area, ResponsiveContainer } from 'recharts';
-import { getPreEmitDiagnostics } from 'typescript';
-import { type } from 'os';
+import { YAxis, Tooltip, AreaChart, Area  } from 'recharts';
+import QRCode from 'react-qr-code';
+import Card from 'react-bootstrap/Card';
+import Modal from 'react-bootstrap/Modal';
 
 const PostList: React.FC = () => {
   
@@ -15,6 +16,7 @@ const PostList: React.FC = () => {
   const [data, setData] = useState([{}]);
   const [currentPrice, setCurrentPrice] = useState(0);
   
+  /* Creating connection to coingeko */
   const getPrices = async (daysAgo: string, nCase: number) => {
     const url1 = 'https://coingecko.p.rapidapi.com/coins/bitcoin/history?date=26-06-2023';
     const url = 'https://coingecko.p.rapidapi.com/coins/bitcoin/market_chart?vs_currency=usd&days=' + daysAgo;
@@ -48,7 +50,50 @@ const PostList: React.FC = () => {
     }
     
   }
+
   getPrices('', 2);
+
+  const [paymentReq, setPaymentReq] = useState('');
+
+  // create an invoice and show the modal when the button is clicked
+  const generateInvoice = useCallback(async () => {
+    await store.createInvoiceAmt(2000);
+    setPaymentReq(store.pmtRequest);
+  }, [store]);
+  
+  const verifyPayment = useCallback(async () => {
+    await store.verifyPayment();
+  }, [store]);
+
+  const showInvoice = !store.pmtSuccessMsg ? (
+    <div className="container">
+      <div className='row'>
+        <div className='col-4'>
+          <p className='text-break'>{paymentReq}</p>
+        </div>
+        <div className='col-2' style={{height: "auto", maxWidth: 64, width: "100%"}}>
+          <QRCode value={paymentReq} size={256} viewBox={`0 0 256 256`} />
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div className="container">
+      <div className='row'>
+        <div className='col-6'>
+          <div className='alert alert-success' role='alert'>
+            {store.pmtSuccessMsg}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+
+  /* modal */
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   return (
     <>
       <h2>
@@ -94,6 +139,150 @@ const PostList: React.FC = () => {
       <div className="mx-auto">
         <h2>transactions</h2>
       </div>
+      
+      <div className='input-group mb-3'>
+        <div className='input-group-prepend'>
+          <span className='input-group-text' id='basic-addon1'>2,000 SATS</span>
+        </div>
+        <Button onClick={generateInvoice}>Buy</Button>
+        <Button onClick={verifyPayment}>Verify</Button>
+      </div>
+      {showInvoice}
+
+      {/* Books */}
+      <div className='books-info'>
+        <div className='book-info'>
+          <Card className='custom-card' style={{ width: '18rem' }}>
+            <Card.Img className='card-img' variant="top" src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1588843906l/52861201._SY475_.jpg" />
+            <Card.Body>
+              <Card.Title>From Blood and Ash</Card.Title>
+              <Card.Text>
+                <h6 className='author'>Jennifer L. Armentrou</h6>
+                From Blood and Ash follows the Maiden, a girl named Poppy who is fated to Ascend soon. 
+                She isn't allowed to speak to or touch anyone but a select few. But a mysterious man 
+                named Hawke becomes her guard, and when attacks from supernatural creatures become more 
+                common, she is forced to trust him.
+                <h6 className='rating'>4.26⭐</h6>
+              </Card.Text>
+              <Button className='buy-button' variant="primary">Comprar</Button>
+            </Card.Body>
+          </Card>
+        </div>
+
+        <div className='book-info'>
+          <Card className='custom-card' style={{ width: '18rem' }}>
+            <Card.Img className='card-img' variant="top" src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1624553583i/58371432.jpg" />
+            <Card.Body>
+              <Card.Title className='card-title'>The Book of Cold Cases</Card.Title>
+              <Card.Text className="card-text">
+                <h6  className='author'>St. James, Simone</h6>
+                  The Book of Cold Cases is St. James at the top of her game,expertly weaving the past 
+                  and the present to reveal a chilling tapestry of real world mystery and supernatural 
+                  suspense that will have you turning pages well past your bedtime and jumping at every 
+                  little sound.
+                <h6   className='rating'>3.91⭐</h6>
+              </Card.Text>
+              <Button className='buy-button' variant="primary">Comprar</Button>
+            </Card.Body>
+          </Card>
+        </div>
+
+        <div className='book-info'>
+          <Card className='custom-card' style={{ width: '18rem' }}>
+            <Card.Img className='card-img' variant="top" src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1635862579i/58064046.jpg" />
+            <Card.Body>
+              <Card.Title>Gallant</Card.Title>
+              <Card.Text>
+                <h6  className='author'>V. E. Schwab</h6>
+                Is a gothic tale of a place where shadows meet light and death meets life. 
+                When Olivia Prior is summoned to her family's home after a lifetime spent 
+                in an orphanage, she's determined to understand what drove her mother, and 
+                countless other family members, to the edge.
+                <h6  className='rating'>3.9⭐</h6>
+              </Card.Text>
+              <Button className='buy-button' variant="primary">Comprar</Button>
+            </Card.Body>
+          </Card>
+        </div>
+
+        <div className='book-info'>
+          <Card className='custom-card' style={{ width: '18rem' }}>
+            <Card.Img className='card-img' variant="top" src="https://m.media-amazon.com/images/I/417-MNeiHqL._SX311_BO1,204,203,200_.jpg" />
+            <Card.Body>
+              <Card.Title>The Blocksize War</Card.Title>
+              <Card.Text className="card-text">
+                <h6  className='author'>Jonathan Bier</h6>
+                This book covers Bitcoin’s blocksize war, which was waged from August 2015 to November 2017. 
+                On the surface the battle was about the amount of data allowed in each Bitcoin block, however 
+                it exposed much deeper issues, such as who controls Bitcoin’s protocol rules. It is not possible 
+                to cover every twist and turn in the labyrinthine conflict or all the arguments, but I have 
+                provided a chronology of the most significant events. This book explores some of the major 
+                characters in the conflict and includes coverage, from both the front lines and behind the scenes, 
+                during some of the most acute phases of the struggle.
+                <h6  className='rating'>4.7⭐</h6>
+              </Card.Text>
+              <Button className='buy-button' variant="primary">Comprar</Button>
+            </Card.Body>
+          </Card>
+        </div>
+
+        <div className='book-info'>
+          <Card className='custom-card' style={{ width: '18rem' }}>
+            <Card.Img className='card-img' variant="top" src="https://m.media-amazon.com/images/I/51Nx2W0cQML._SX322_BO1,204,203,200_.jpg" />
+            <Card.Body>
+              <Card.Title>Layered Money: From Gold and Dollars to Bitcoin and Central Bank Digital Currencies</Card.Title>
+              <Card.Text className="card-text">
+                <h6  className='author'>Nikhil Bhatia</h6>
+                In this fascinating deep dive into the evolution of monetary systems around the globe, 
+                Nik Bhatia takes us into the origins of how money has evolved to function in a "layered" 
+                manner. Using gold as an example of this term, he traces the layers of this ancient currency 
+                from raw mined material, to gold coins, and finally to bank-issued gold certificates. In a 
+                groundbreaking manner, Bhatia offers a similar paradigm for the evolution of digital currencies.
+                <h6  className='rating'>4.7⭐</h6>
+              </Card.Text>
+              <Button className='buy-button' variant="primary">Comprar</Button>
+            </Card.Body>
+          </Card>
+        </div>
+
+        <div className='book-info'>
+          <Card className='custom-card' style={{ width: '18rem' }}>
+            <Card.Img className='card-img' variant="top" src="https://m.media-amazon.com/images/I/41C7TkN5KeL._SX331_BO1,204,203,200_.jpg" />
+            <Card.Body>
+              <Card.Title>The Price of Tomorrow</Card.Title>
+              <Card.Text className="card-text">
+                <h6  className='author'> Jeff Booth</h6>
+                We live in an extraordinary time. Technological advances are happening at a rate faster than our 
+                ability to understand them, and in a world that moves faster than we can imagine, we cannot afford 
+                to stand still. These advances bring efficiency and abundance and they are profoundly deflationary. 
+                Our economic systems were built for a pre-technology era when labour and capital were inextricably 
+                linked, an era that counted on growth and inflation, an era where we made money from inefficiency.
+                <h6  className='rating'>4.6⭐</h6>
+              </Card.Text>
+              <Button className='buy-button' variant="primary">Comprar</Button>
+            </Card.Body>
+          </Card>
+        </div>
+      </div>
+
+      <Button variant="primary" onClick={handleShow}>
+        Launch demo modal
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
       
     </>
   );

@@ -12,7 +12,6 @@ const PayModal: React.FC = () => {
         {store.pmtError && <Alert variant="danger">{store.pmtError}</Alert>}
         <Form.Label>
           Payment Request for <strong>{store.pmtAmount} sats</strong> to{' '}
-          <strong>{store.pmtForPost?.username}</strong>
         </Form.Label>
         <Form.Control required as="textarea" rows={5} value={store.pmtRequest} readOnly />
         <Form.Text></Form.Text>
@@ -29,7 +28,7 @@ const PayModal: React.FC = () => {
   return (
     <Modal show={true} onHide={store.hidePaymentRequest}>
       <Modal.Header closeButton>
-        <Modal.Title>{store.pmtForPost?.title}</Modal.Title>
+        <Modal.Title></Modal.Title>
       </Modal.Header>
       <Modal.Body>{body}</Modal.Body>
     </Modal>
