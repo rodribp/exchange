@@ -9,6 +9,13 @@ const CreatePost: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
+
+  const handleAmount = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value == '' || !isNaN(parseFloat(value))) {
+      setTitle(value);
+    }
+  }, []);
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLElement>) => {
       e.preventDefault();
@@ -16,6 +23,7 @@ const CreatePost: React.FC = () => {
     },
     [title, content, store],
   );
+
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -27,7 +35,8 @@ const CreatePost: React.FC = () => {
             <Form.Control
               required
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              placeholder='SATS'
+              onChange={handleAmount}
               className="fControl-style"
             />
           </Form.Group>
@@ -43,7 +52,7 @@ const CreatePost: React.FC = () => {
             />
           </Form.Group>
         </Card.Body>
-        <Card.Footer>
+        <Card.Footer className="card-footer-style">
           <Row>
             <Col>
               <Button variant="outline-danger" onClick={store.gotoPosts} className="cst-button">

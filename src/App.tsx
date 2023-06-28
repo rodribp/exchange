@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Alert, Badge, Container, Dropdown, Nav, Navbar, NavLink } from 'react-bootstrap';
+import { Alert, Badge, Container, Dropdown, Nav, Navbar, NavLink, Button } from 'react-bootstrap';
 import Confetti from 'react-confetti';
 import { observer } from 'mobx-react-lite';
 import Connect from './pages/Connect';
@@ -10,6 +10,11 @@ import { useStore } from './store/Provider';
 function App() {
   const store = useStore();
 
+
+  function CapsNode(ab: string): string {
+    return ab.charAt(0).toUpperCase() + ab.slice(1);
+  }
+  
   const pages: Record<string, ReactNode> = {
     posts: <PostList />,
     create: <CreatePost />,
@@ -36,12 +41,15 @@ function App() {
                     {store.balance.toLocaleString()} sats
                   </Badge>
                 </Navbar.Text>
-                <Dropdown id="basic-nav-dropdown" alignRight>
-                  <Dropdown.Toggle as={NavLink}>{store.alias}</Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={store.disconnect}>Disconnect</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+
+                <Nav.Item>
+                <NavLink className="text-white">Hello! {CapsNode(store.alias)}</NavLink>
+              </Nav.Item>
+
+        
+                <Button variant="outline-danger" onClick={store.disconnect} className="cst-button btn-log bg-danger">
+                  Log out
+              </Button> 
               </>
             )}
           </Nav>
