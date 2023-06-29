@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Alert, Badge, Container, Dropdown, Nav, Navbar, NavLink, Button } from 'react-bootstrap';
+import { Alert, Badge, Container, Dropdown, Nav, Navbar, NavLink, Button, Image } from 'react-bootstrap';
 import Confetti from 'react-confetti';
 import { observer } from 'mobx-react-lite';
 import Connect from './pages/Connect';
@@ -24,34 +24,13 @@ function App() {
   return (
     <>
       <Navbar bg="dark" variant="dark" expand="md">
-        <Navbar.Brand onClick={store.gotoPosts}>
-          Fili's Bitcoin Exchange
+        <Navbar.Brand className="text-warning" onClick={store.gotoPosts}>
+          Fili's Library
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
-            {!store.connected ? (
-              <Nav.Item>
-                <NavLink onClick={store.gotoConnect}>Sign In</NavLink>
-              </Nav.Item>
-            ) : (
-              <>
-                <Navbar.Text>
-                  <Badge variant="info" pill className="mr-3">
-                    {store.balance.toLocaleString()} sats
-                  </Badge>
-                </Navbar.Text>
-
-                <Nav.Item>
-                <NavLink className="text-white">Hello! {CapsNode(store.alias)}</NavLink>
-              </Nav.Item>
-
-        
-                <Button variant="outline-danger" onClick={store.disconnect} className="cst-button btn-log bg-danger">
-                  Log out
-              </Button> 
-              </>
-            )}
+            <img src='https://cdn-icons-png.flaticon.com/512/6211/6211426.png' className='img-fluid' alt='Response image' width={50}></img>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

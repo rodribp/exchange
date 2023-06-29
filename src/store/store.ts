@@ -147,7 +147,7 @@ export class Store {
     this.pmtError = '';
     try {
       await api.verifyPayment(this.pmtHash);
-      this.pmtSuccessMsg = `Your payment of ${this.pmtAmount} sats to was successful!`;
+      this.pmtSuccessMsg = `Your payment of ${this.pmtAmount} sats was successful!`;
     } catch (err) {
       this.pmtError = err.message;
     }
